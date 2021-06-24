@@ -1,0 +1,32 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#country {
+  width: 200px;
+  height: 30px;
+  margin-left: 600px;
+  margin-top: 30px;
+}
+
+#submitBtn {
+  display: block;
+  margin-left: 600px;
+  margin-top: 30px;
+  background: linear-gradient(35deg, #136a8a, #26787198);
+  color: #fff;
+  border: none;
+  position: relative;
+  height: 60px;
+  font-size: 1.6em;
+  padding: 0 2em;
+  cursor: pointer;
+  transition: 800ms ease all;
+  border-radius: 10px;
+}
+
+#submitBtn:hover {
+  background: rgb(221, 166, 166);
+}
