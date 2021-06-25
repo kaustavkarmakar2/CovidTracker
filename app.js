@@ -4,48 +4,66 @@ const interFace = document.querySelector("#interface");
 
 // heading part
 const createHeading = document.createElement("h1");
-createHeading.innerText = "Covid19 Tracker using";
-createHeading.style.textAlign = "center";
+createHeading.innerText = "Covid-19 Cases In The World";
 createHeading.setAttribute("class", "heading");
 interFace.appendChild(createHeading);
 //  create form
-const formTag = document.createElement("form");
-formTag.id = "fromTag";
-interFace.appendChild(formTag);
+const fromElement = document.createElement("form");
+fromElement.id = "fromTag";
+interFace.appendChild(fromElement);
 
 // field part
 
-const inputPart = document.createElement("input");
-inputPart.type = "test";
-inputPart.placeholder = "Enter Your Country Name";
-inputPart.id = "country";
-formTag.appendChild(inputPart);
+const inputField = document.createElement("input");
+inputField.type = "text";
+inputField.placeholder = "Enter Your Country Name";
+inputField.id = "input-field";
+fromElement.appendChild(inputField);
 
 // submit part
-const submit = document.createElement("input");
-submit.type = "submit";
-submit.value = "Get Data";
+const submit = document.createElement("button");
+submit.innerText = "Get Data";
 submit.id = "submitBtn";
-formTag.appendChild(submit);
+fromElement.appendChild(submit);
 
-// Total confirmed
+submit.addEventListener("click", () => {
+  const menu = document.querySelector(".all-cases");
+  menu.classList = "active-all-cases";
+
+  const hideHeadingTable = document.querySelector(".heading-table");
+  hideHeadingTable.style.display = "none";
+});
+
+// div contain all the h2 tag
+const containAllCases = document.createElement("div");
+containAllCases.className = "all-cases";
+
 const totalConfirmed = document.createElement("h2");
-interFace.appendChild(totalConfirmed);
-//  Total Recovered
-const totalRecovered = document.createElement("h2");
-interFace.appendChild(totalRecovered);
+totalConfirmed.className = "total-confirm";
 
-// Total Death
+containAllCases.appendChild(totalConfirmed);
+
+const totalRecovered = document.createElement("h2");
+totalRecovered.className = "total-recover";
+containAllCases.appendChild(totalRecovered);
+
 const totalDeath = document.createElement("h2");
-interFace.appendChild(totalDeath);
+totalDeath.className = "total-death";
+containAllCases.appendChild(totalDeath);
+
+const newConfirmed = document.createElement("h2");
+newConfirmed.className = "new-confirm";
+containAllCases.appendChild(newConfirmed);
+
+interFace.appendChild(containAllCases);
 
 /* fetch the data */
 
-formTag.addEventListener("submit", (e) => {
+fromElement.addEventListener("submit", (e) => {
   e.preventDefault();
-  const submitValue = inputPart.value;
-  inputPart.focus();
-  inputPart.value = "";
+  const submitValue = inputField.value;
+  inputField.focus();
+  inputField.value = "";
 
   // fetch request to get the data
 
@@ -64,13 +82,17 @@ formTag.addEventListener("submit", (e) => {
         const confirmed = totalConfirmed;
         const recovered = totalRecovered;
         const death = totalDeath;
+        const newCases = newConfirmed;
 
         confirmed.innerHTML = "";
         recovered.innerHTML = "";
         death.innerHTML = "";
+        newCases.innerHTML = "";
+
         confirmed.append(`Total Confirmed: ${res[index].Confirmed}`);
         recovered.append(`Total Recovered: ${res[index].Recovered}`);
         death.append(`Total Death:  ${res[index].Deaths}`);
+        newCases.append(`New Confirmed: ${res[index].Active} `);
       })
       .catch((error) => {
         window.alert(`Please Enter your Country Name`);
@@ -86,7 +108,6 @@ async function getApi() {
   try {
     const fetchApi = await fetch("https://api.covid19api.com/summary");
     const dataJson = await fetchApi.json();
-    const total = dataJson.Countries;
 
     // Italy cases
     const totalConfirmedItaly = dataJson.Countries[82].TotalConfirmed;
@@ -106,8 +127,6 @@ async function getApi() {
     document.getElementById("newConfirmedItaly").innerHTML = newConfirmedItaly;
     document.getElementById("newDeathsItaly").innerHTML = newDeathsItaly;
     document.getElementById("newRecoveredItaly").innerHTML = newRecoveredItaly;
-
-    console.log(total);
 
     // Brazil Cases
 
@@ -331,17 +350,40 @@ async function getApi() {
     console.log(error);
   }
 }
-
 getApi();
+
+function createVirusFall() {
+  const heart = document.createElement("div");
+
+  heart.classList.add("heart");
+
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+
+  heart.innerText = "🦠";
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 3000);
+}
+
+setInterval(createVirusFall, 300);
 
 function getAllElement() {}
 function makeTable() {
+  const tableHeading = document.createElement("h2");
+  tableHeading.textContent =
+    "If you don't found your country name in the table, please enter it in the field";
+  tableHeading.className = "heading-table";
+  interFace.append(tableHeading);
   const table = document.createElement("div");
-  table.className = "table";
+  table.className = "entire-table";
 
-  table.innerHTML = `<table border="1">
-<tr style="background-color: green;">
-    <th >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+  table.innerHTML = `<table>
+    <tr style="background-color: green;" >
+    <th >Countries</th>
     <th style="padding: 10px">Total Confirmed</th>
     <th >Total Deaths</th>
     <th >Total Recovered</th>
@@ -456,8 +498,8 @@ function makeTable() {
 <td id="newRecoveredSouthAfrica"></td>
 </tr>
 </table>
-
-<a href="javascript:window.location.reload(true)"><button>Refresh Page</button></a>
+<br />
+<a href="javascript:window.location.reload(true)"><button class="refresh-button">Refresh Page</button></a>
 `;
 
   interFace.append(table);
